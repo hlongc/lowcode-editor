@@ -1,3 +1,10 @@
+import { useComponetsStore } from "../../store/components";
+
 export default function Setting() {
-  return <div>Setting</div>;
+  const { components } = useComponetsStore();
+  return (
+    <div>
+      <pre>{JSON.stringify(components, null, 2)}</pre>
+    </div>
+  );
 }

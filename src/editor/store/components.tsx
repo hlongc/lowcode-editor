@@ -47,7 +47,6 @@ export const useComponetsStore = create<State & Action>((set, get) => ({
     set((state) => {
       if (parentId) {
         const parentComponent = getComponentById(parentId, state.components);
-
         if (parentComponent) {
           if (parentComponent.children) {
             parentComponent.children.push(component);
