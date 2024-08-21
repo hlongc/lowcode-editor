@@ -1,6 +1,6 @@
 import { createElement, ReactNode } from "react";
-import { useComponetsStore, Component } from "../../store/components";
-import { useComponentConfigStore } from "../../store/component-config";
+import { useComponetsStore, Component } from "@/editor/store/components";
+import { useComponentConfigStore } from "@/editor/store/component-config";
 
 export default function EditArea() {
   const { componentConfig } = useComponentConfigStore();

@@ -1,5 +1,5 @@
 import { useDrop } from "react-dnd";
-import { useComponentConfigStore } from "../store/component-config";
+import { useComponentConfigStore } from "@/editor/store/component-config";
 import { useComponetsStore } from "../store/components";
 
 export default function useMaterialDrop(accept: string[], id: number) {
