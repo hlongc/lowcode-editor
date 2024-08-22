@@ -7,7 +7,8 @@ export default function Container({ children, id }: CommonComponentProps) {
   return (
     <div
       ref={drop}
-      datatype="Container"
+      data-type="Container"
+      data-component-id={id}
       className="min-h-[100px] p-[20px]"
       style={{
         border: canDrop ? "1px solid blue" : "1px solid #000",
