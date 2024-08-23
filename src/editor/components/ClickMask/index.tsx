@@ -1,23 +1,21 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { useCreation, useMemoizedFn } from "ahooks";
-import {
-  useComponentsStore,
-  getComponentById,
-} from "@/editor/store/components";
+import { useMemoizedFn } from "ahooks";
+import { useComponentsStore } from "@/editor/store/components";
+import { CloseSquareOutlined } from "@ant-design/icons";
+import { Popconfirm } from "antd";
 
 interface Props {
   containerClassName: string;
-  componentId: number;
   wrapperClassName: string;
 }
 
-export default function HoverMask({
-  componentId,
+export default function ClickMask({
   containerClassName,
   wrapperClassName,
 }: Props) {
-  const { components } = useComponentsStore();
+  const { components, currentComponent, currentComponentId } =
+    useComponentsStore();
 
   const [position, setPosition] = useState({
     left: 0,
@@ -28,18 +26,14 @@ export default function HoverMask({
     labelLeft: 0,
   });
 
-  const component = useCreation(() => {
-    return getComponentById(componentId, components);
-  }, [components, componentId]);
-
   const updatePosition = useMemoizedFn(() => {
-    if (!componentId) return;
+    if (!currentComponentId) return;
     const root = document.querySelector(
       `.${containerClassName}`
     ) as HTMLElement;
     if (!root) return;
     const target = root.querySelector(
-      `[data-component-id="${componentId}"]`
+      `[data-component-id="${currentComponentId}"]`
     ) as HTMLElement;
     if (!target) return;
 
@@ -66,7 +60,7 @@ export default function HoverMask({
 
   useEffect(() => {
     updatePosition();
-  }, [componentId]);
+  }, [currentComponentId]);
 
   return createPortal(
     <>
@@ -104,8 +98,16 @@ export default function HoverMask({
             whiteSpace: "nowrap",
           }}
         >
-          {component?.desc}
+          {currentComponent?.name}
         </div>
+        <Popconfirm
+          title={`确认删除组件${currentComponent?.desc}及下级组件吗？`}
+          onConfirm={() => {
+            console.log("确认");
+          }}
+        >
+          <CloseSquareOutlined style={{ cursor: "pointer" }} />
+        </Popconfirm>
       </div>
     </>,
     document.querySelector(`.${wrapperClassName}`) as HTMLElement

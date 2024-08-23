@@ -6,7 +6,7 @@ export default function Material() {
   const { componentConfig } = useComponentConfigStore();
 
   const components = useCreation(() => {
-    return Object.values(componentConfig);
+    return Object.values(componentConfig).filter((component) => component.name !== "Page");
   }, [componentConfig]);
 
   return (

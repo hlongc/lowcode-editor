@@ -1,13 +1,17 @@
 import { createElement, ReactNode, useState } from "react";
-import { useComponetsStore, Component } from "@/editor/store/components";
+import { useComponentsStore, Component } from "@/editor/store/components";
 import { useComponentConfigStore } from "@/editor/store/component-config";
 import HoverMask from "../HoverMask";
+import ClickMask from "../ClickMask";
+
+const hoverMaskClassName = "hover-mask-container";
+const clickMaskClassName = "click-mask-container";
 
 export default function EditArea() {
   const { componentConfig } = useComponentConfigStore();
-  const { components } = useComponetsStore();
+  const { components, setCurrentComponentId, currentComponentId } =
+    useComponentsStore();
   const [hoverComponentId, setHoverComponentId] = useState<number>();
-  console.log("components", components);
 
   const renderComponents = (components: Component[]): ReactNode => {
     return components.map((component) => {
@@ -44,19 +48,40 @@ export default function EditArea() {
     setHoverComponentId(undefined);
   };
 
+  const onClick = (e: React.MouseEvent) => {
+    const path = e.nativeEvent.composedPath();
+    for (let i = 0; i < path.length; i++) {
+      const el = path[i] as HTMLElement;
+      const componentId = el.dataset?.componentId;
+      if (componentId) {
+        setCurrentComponentId(+componentId);
+        break;
+      }
+    }
+  };
+
   return (
     <div
       className="h-[100%] edit-area"
       onMouseOver={onMouseOver}
       onMouseLeave={onMouseLeave}
+      onClick={onClick}
     >
       {renderComponents(components)}
-      <div className="mask-container"></div>
-      {hoverComponentId && (
+      <div className={hoverMaskClassName}></div>
+      <div className={clickMaskClassName}></div>
+      {/* 避免hover的和click的同时出现 */}
+      {hoverComponentId && hoverComponentId !== currentComponentId && (
         <HoverMask
           componentId={hoverComponentId}
           containerClassName="edit-area"
-          wrapperClassName="mask-container"
+          wrapperClassName={hoverMaskClassName}
+        />
+      )}
+      {currentComponentId && (
+        <ClickMask
+          containerClassName="edit-area"
+          wrapperClassName={clickMaskClassName}
         />
       )}
     </div>

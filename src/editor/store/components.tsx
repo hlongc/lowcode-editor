@@ -3,6 +3,7 @@ import { create } from "zustand";
 export interface Component {
   id: number;
   name: string;
+  desc: string;
   props: Record<string, any>;
   children?: Component[];
   parentId?: number;
@@ -10,19 +11,22 @@ export interface Component {
 
 interface State {
   components: Component[];
+  currentComponentId?: number;
+  currentComponent?: Component;
 }
 
 interface Action {
   addComponent: (component: Component, parentId?: number) => void;
   deleteComponent: (componentId: number) => void;
   updateComponentProps: (componentId: number, props: any) => void;
+  setCurrentComponentId: (componentId: number) => void;
 }
 
 export function getComponentById(
-  id: number | null,
+  id: number | undefined,
   components: Component[]
-): Component | null {
-  if (!id) return null;
+): Component | undefined {
+  if (!id) return undefined;
 
   for (const component of components) {
     if (component.id == id) return component;
@@ -31,10 +35,10 @@ export function getComponentById(
       if (result !== null) return result;
     }
   }
-  return null;
+  return undefined;
 }
 
-export const useComponetsStore = create<State & Action>((set, get) => ({
+export const useComponentsStore = create<State & Action>((set, get) => ({
   components: [
     {
       id: 1,
@@ -43,6 +47,14 @@ export const useComponetsStore = create<State & Action>((set, get) => ({
       desc: "页面",
     },
   ],
+  setCurrentComponentId: (componentId) =>
+    set((state) => {
+      const component = getComponentById(componentId, state.components);
+      return {
+        currentComponentId: componentId,
+        currentComponent: component,
+      };
+    }),
   addComponent: (component, parentId) =>
     set((state) => {
       if (parentId) {
