@@ -84,24 +84,20 @@ export default function ClickMask({
           top: position.labelTop,
           fontSize: "14px",
           zIndex: 13,
-          display: !position.width || position.width < 10 ? "none" : "inline",
+          display: !position.width || position.width < 10 ? "none" : "flex",
+          alignItems: "center",
+          gap: "5px",
           transform: "translate(-100%, -100%)",
+          backgroundColor: "blue",
+          color: "#fff",
+          padding: "0 8px",
         }}
       >
-        <div
-          style={{
-            padding: "0 8px",
-            backgroundColor: "blue",
-            borderRadius: 4,
-            color: "#fff",
-            cursor: "pointer",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {currentComponent?.name}
-        </div>
+        <div style={{ whiteSpace: "nowrap" }}>{currentComponent?.name}</div>
         <Popconfirm
           title={`确认删除组件${currentComponent?.desc}及下级组件吗？`}
+          cancelText="取消"
+          okText="确认"
           onConfirm={() => {
             console.log("确认");
           }}
