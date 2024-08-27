@@ -19,7 +19,7 @@ interface Action {
   addComponent: (component: Component, parentId?: number) => void;
   deleteComponent: (componentId: number) => void;
   updateComponentProps: (componentId: number, props: any) => void;
-  setCurrentComponentId: (componentId: number) => void;
+  setCurrentComponentId: (componentId: number | undefined) => void;
 }
 
 export function getComponentById(
@@ -38,10 +38,12 @@ export function getComponentById(
   return undefined;
 }
 
+export const PageComponentId = 1;
+
 export const useComponentsStore = create<State & Action>((set, get) => ({
   components: [
     {
-      id: 1,
+      id: PageComponentId,
       name: "Page",
       props: {},
       desc: "页面",

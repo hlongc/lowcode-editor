@@ -1,5 +1,9 @@
 import { createElement, ReactNode, useState } from "react";
-import { useComponentsStore, Component } from "@/editor/store/components";
+import {
+  useComponentsStore,
+  Component,
+  PageComponentId,
+} from "@/editor/store/components";
 import { useComponentConfigStore } from "@/editor/store/component-config";
 import HoverMask from "../HoverMask";
 import ClickMask from "../ClickMask";
@@ -53,7 +57,8 @@ export default function EditArea() {
     for (let i = 0; i < path.length; i++) {
       const el = path[i] as HTMLElement;
       const componentId = el.dataset?.componentId;
-      if (componentId) {
+      // 根组件Page不能被选中
+      if (componentId && +componentId !== PageComponentId) {
         setCurrentComponentId(+componentId);
         break;
       }
@@ -71,13 +76,15 @@ export default function EditArea() {
       <div className={hoverMaskClassName}></div>
       <div className={clickMaskClassName}></div>
       {/* 避免hover的和click的同时出现 */}
-      {hoverComponentId && hoverComponentId !== currentComponentId && (
-        <HoverMask
-          componentId={hoverComponentId}
-          containerClassName="edit-area"
-          wrapperClassName={hoverMaskClassName}
-        />
-      )}
+      {hoverComponentId &&
+        hoverComponentId !== currentComponentId &&
+        hoverComponentId !== PageComponentId && (
+          <HoverMask
+            componentId={hoverComponentId}
+            containerClassName="edit-area"
+            wrapperClassName={hoverMaskClassName}
+          />
+        )}
       {currentComponentId && (
         <ClickMask
           containerClassName="edit-area"
