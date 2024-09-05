@@ -2,7 +2,7 @@ import { Allotment } from "allotment";
 import "allotment/dist/style.css";
 import Header from "./components/Header";
 import Setting from "./components/Setting";
-import Material from "./components/Material";
+import MaterialWrapper from "./components/MaterialWrapper";
 import EditArea from "./components/EditArea";
 
 export default function Editor() {
@@ -14,7 +14,7 @@ export default function Editor() {
       <div className="flex-1">
         <Allotment>
           <Allotment.Pane preferredSize={240} maxSize={300} minSize={200}>
-            <Material />
+            <MaterialWrapper />
           </Allotment.Pane>
           <Allotment.Pane>
             <EditArea />

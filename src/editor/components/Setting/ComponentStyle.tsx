@@ -77,9 +77,7 @@ export default function ComponentStyle() {
         { ...form.getFieldsValue(), ...css },
         true
       );
-    } catch (e) {
-      console.error(e);
-    }
+    } catch {}
   }, 500);
 
   if (!currentComponentId || !currentComponent) return null;

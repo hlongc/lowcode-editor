@@ -1,4 +1,4 @@
-import { createElement, ReactNode, useState } from "react";
+import { createElement, ReactNode } from "react";
 import {
   useComponentsStore,
   Component,
@@ -13,9 +13,13 @@ const clickMaskClassName = "click-mask-container";
 
 export default function EditArea() {
   const { componentConfig } = useComponentConfigStore();
-  const { components, setCurrentComponentId, currentComponentId } =
-    useComponentsStore();
-  const [hoverComponentId, setHoverComponentId] = useState<number>();
+  const {
+    components,
+    setCurrentComponentId,
+    currentComponentId,
+    hoverComponentId,
+    setHoverComponentId,
+  } = useComponentsStore();
 
   const renderComponents = (components: Component[]): ReactNode => {
     return components.map((component) => {

@@ -15,6 +15,7 @@ interface State {
   components: Component[];
   currentComponentId?: number;
   currentComponent?: Component;
+  hoverComponentId?: number;
 }
 
 interface Action {
@@ -27,6 +28,7 @@ interface Action {
     replace?: boolean
   ) => void;
   setCurrentComponentId: (componentId: number | undefined) => void;
+  setHoverComponentId: (componentId: number | undefined) => void;
 }
 
 export function getComponentById(
@@ -39,7 +41,7 @@ export function getComponentById(
     if (component.id == id) return component;
     if (component.children && component.children.length > 0) {
       const result = getComponentById(id, component.children);
-      if (result !== null) return result;
+      if (result !== undefined) return result;
     }
   }
   return undefined;
@@ -56,9 +58,14 @@ export const useComponentsStore = create<State & Action>((set, get) => ({
       desc: "页面",
     },
   ],
+  setHoverComponentId: (componentId) =>
+    set(() => {
+      return { hoverComponentId: componentId };
+    }),
   setCurrentComponentId: (componentId) =>
     set((state) => {
       const component = getComponentById(componentId, state.components);
+
       return {
         currentComponentId: componentId,
         currentComponent: component,
