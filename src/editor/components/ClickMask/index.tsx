@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { useCreation, useMemoizedFn } from "ahooks";
+import { useCreation, useMemoizedFn, useDebounceFn } from "ahooks";
 import {
   useComponentsStore,
   getComponentById,
@@ -13,11 +13,13 @@ import { debounce } from "lodash-es";
 interface Props {
   containerClassName: string;
   wrapperClassName: string;
+  setHoverComponentId: (id: number | undefined) => void;
 }
 
 export default function ClickMask({
   containerClassName,
   wrapperClassName,
+  setHoverComponentId,
 }: Props) {
   const {
     components,
@@ -86,6 +88,8 @@ export default function ClickMask({
             </span>
           ),
           onClick: () => setCurrentComponentId(component.id),
+          onMouseEnter: () => setHoverComponentId(component.id),
+          onMouseLeave: () => setHoverComponentId(undefined),
         });
         if (component.parentId) {
           stack.push(component.parentId);
@@ -95,18 +99,25 @@ export default function ClickMask({
     return data;
   }, [currentComponentId, components]);
 
-  useEffect(() => {
-    updatePosition();
-  }, [currentComponentId, components]);
+  const { run: updatePositionDebounce } = useDebounceFn(updatePosition, {
+    wait: 50,
+  });
 
   useEffect(() => {
-    const resizeHandler = debounce(() => {
-      updatePosition();
-    }, 50);
+    updatePositionDebounce();
+  }, [currentComponentId]);
 
-    window.addEventListener("resize", resizeHandler);
+  useEffect(() => {
+    setTimeout(() => {
+      updatePositionDebounce();
+    }, 200);
+    // 组件样式变化时，重新计算位置，但是要延迟计算，因为渲染需要一些时间
+  }, [components]);
+
+  useEffect(() => {
+    window.addEventListener("resize", updatePositionDebounce);
     return () => {
-      window.removeEventListener("resize", resizeHandler);
+      window.removeEventListener("resize", updatePositionDebounce);
     };
   }, []);
 

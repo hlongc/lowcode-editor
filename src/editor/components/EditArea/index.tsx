@@ -28,6 +28,7 @@ export default function EditArea() {
         {
           key: component.id,
           id: component.id,
+          style: component.style,
           ...config.defaultProps,
           ...component.props,
         },
@@ -89,6 +90,7 @@ export default function EditArea() {
         <ClickMask
           containerClassName="edit-area"
           wrapperClassName={clickMaskClassName}
+          setHoverComponentId={setHoverComponentId}
         />
       )}
     </div>
