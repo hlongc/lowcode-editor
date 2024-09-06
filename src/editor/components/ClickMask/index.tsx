@@ -8,7 +8,6 @@ import {
 } from "@/editor/store/components";
 import { CloseSquareOutlined } from "@ant-design/icons";
 import { Dropdown, Popconfirm, MenuProps } from "antd";
-import { debounce } from "lodash-es";
 
 interface Props {
   containerClassName: string;
@@ -40,6 +39,7 @@ export default function ClickMask({
 
   const updatePosition = useMemoizedFn(() => {
     if (!currentComponentId) return;
+
     const root = document.querySelector(
       `.${containerClassName}`
     ) as HTMLElement;
@@ -115,9 +115,24 @@ export default function ClickMask({
   }, [components]);
 
   useEffect(() => {
-    window.addEventListener("resize", updatePositionDebounce);
+    const element = document.querySelector(`.${containerClassName}`);
+
+    // 创建一个 ResizeObserver 实例，并在元素大小变化时更新状态
+    const resizeObserver = new ResizeObserver((entries) => {
+      if (entries.length > 0) {
+        updatePositionDebounce();
+      }
+    });
+
+    if (element) {
+      resizeObserver.observe(element); // 监听指定的元素
+    }
+
+    // 清理函数，组件卸载或元素改变时取消监听
     return () => {
-      window.removeEventListener("resize", updatePositionDebounce);
+      if (element) {
+        resizeObserver.unobserve(element);
+      }
     };
   }, []);
 

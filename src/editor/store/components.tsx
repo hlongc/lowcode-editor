@@ -16,6 +16,7 @@ interface State {
   currentComponentId?: number;
   currentComponent?: Component;
   hoverComponentId?: number;
+  showPreview: boolean;
 }
 
 interface Action {
@@ -29,6 +30,7 @@ interface Action {
   ) => void;
   setCurrentComponentId: (componentId: number | undefined) => void;
   setHoverComponentId: (componentId: number | undefined) => void;
+  setShowPreview: (show: boolean) => void;
 }
 
 export function getComponentById(
@@ -58,6 +60,8 @@ export const useComponentsStore = create<State & Action>((set, get) => ({
       desc: "页面",
     },
   ],
+  showPreview: false,
+  setShowPreview: (show) => set({ showPreview: show }),
   setHoverComponentId: (componentId) =>
     set(() => {
       return { hoverComponentId: componentId };

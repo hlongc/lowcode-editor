@@ -10,6 +10,7 @@ import ClickMask from "../ClickMask";
 
 const hoverMaskClassName = "hover-mask-container";
 const clickMaskClassName = "click-mask-container";
+const areaClassName = "edit-area";
 
 export default function EditArea() {
   const { componentConfig } = useComponentConfigStore();
@@ -25,10 +26,10 @@ export default function EditArea() {
     return components.map((component) => {
       // 从已注册的组件中拿到组件信息
       const config = componentConfig[component.name];
-      if (!config?.name) return null;
+      if (!config?.name || !config.dev) return null;
 
       return createElement(
-        config.component,
+        config.dev,
         {
           key: component.id,
           id: component.id,
@@ -72,7 +73,7 @@ export default function EditArea() {
 
   return (
     <div
-      className="h-[100%] edit-area"
+      className={`h-[100%] ${areaClassName}`}
       onMouseOver={onMouseOver}
       onMouseLeave={onMouseLeave}
       onClick={onClick}
@@ -86,13 +87,13 @@ export default function EditArea() {
         hoverComponentId !== PageComponentId && (
           <HoverMask
             componentId={hoverComponentId}
-            containerClassName="edit-area"
+            containerClassName={areaClassName}
             wrapperClassName={hoverMaskClassName}
           />
         )}
       {currentComponentId && (
         <ClickMask
-          containerClassName="edit-area"
+          containerClassName={areaClassName}
           wrapperClassName={clickMaskClassName}
           setHoverComponentId={setHoverComponentId}
         />

@@ -6,7 +6,7 @@ import ComponentAttr from "./ComponentAttr";
 import ComponentEvent from "./ComponentEvent";
 
 export default function Setting() {
-  const { components, currentComponentId } = useComponentsStore();
+  const { currentComponentId } = useComponentsStore();
 
   const [key, setKey] = useState<string>("属性");
 
