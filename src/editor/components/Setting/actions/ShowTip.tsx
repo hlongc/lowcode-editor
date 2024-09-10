@@ -1,14 +1,9 @@
 import { Input, Select } from "antd";
-import { ActionEnum } from "../common";
-
-export interface ShowTipConfig {
-  type?: string;
-  text?: string;
-}
+import { ActionEnum, ShowTipConfig } from "../common";
 
 export interface ShowTipProps {
   value?: ShowTipConfig;
-  onChange?: (type: string, data: ShowTipConfig) => void;
+  onChange?: (data: ShowTipConfig) => void;
 }
 
 export default function ShowTip(props: ShowTipProps) {
@@ -26,9 +21,13 @@ export default function ShowTip(props: ShowTipProps) {
           className="flex-1"
           placeholder="请选择提示类型"
           onChange={(val) =>
-            onChange?.(ActionEnum.showTip, { type: val, text: value?.text })
+            onChange?.({
+              messageType: val,
+              text: value?.text,
+              type: ActionEnum.showTip,
+            })
           }
-          value={value?.type}
+          value={value?.messageType}
         />
       </div>
       <div className="flex items-center">
@@ -37,9 +36,10 @@ export default function ShowTip(props: ShowTipProps) {
           className="flex-1"
           placeholder="请输入提示文案"
           onChange={(e) =>
-            onChange?.(ActionEnum.showTip, {
-              type: value?.type,
+            onChange?.({
+              messageType: value?.messageType,
               text: e.target.value,
+              type: ActionEnum.showTip,
             })
           }
           value={value?.text}

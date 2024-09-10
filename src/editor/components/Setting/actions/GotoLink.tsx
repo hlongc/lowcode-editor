@@ -1,13 +1,9 @@
 import { Input } from "antd";
-import { ActionEnum } from "../common";
-
-export interface GotoLinkConfig {
-  url: string;
-}
+import { ActionEnum, GotoLinkConfig } from "../common";
 
 export interface GotoLinkProps {
   value?: GotoLinkConfig;
-  onChange?: (type: string, data: GotoLinkConfig) => void;
+  onChange?: (data: GotoLinkConfig) => void;
 }
 
 export default function GotoLink(props: GotoLinkProps) {
@@ -20,7 +16,10 @@ export default function GotoLink(props: GotoLinkProps) {
         className="flex-1"
         placeholder="请输入url链接"
         onChange={(e) =>
-          onChange?.(ActionEnum.gotoLink, { url: e.target.value })
+          onChange?.({
+            url: e.target.value,
+            type: ActionEnum.gotoLink,
+          })
         }
         value={value?.url}
       />

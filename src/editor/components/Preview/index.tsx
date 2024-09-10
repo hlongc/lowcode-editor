@@ -2,7 +2,7 @@ import { Drawer, message } from "antd";
 import { Component, useComponentsStore } from "@/editor/store/components";
 import { useComponentConfigStore } from "@/editor/store/component-config";
 import React, { createElement } from "react";
-import { ActionEnum } from "../Setting/common";
+import { ActionEnum, GotoLinkConfig, ShowTipConfig } from "../Setting/common";
 
 export default function Preview() {
   const { showPreview, setShowPreview, components } = useComponentsStore();
@@ -14,18 +14,27 @@ export default function Preview() {
     componentConfig[component.name].events?.forEach((event) => {
       const eventConfig = component.props[event.name];
       if (eventConfig) {
-        const { type, url, text, messageType } = eventConfig;
         props[event.name] = () => {
-          if (type === ActionEnum.gotoLink && url) {
-            window.open(url);
-          } else if (type === ActionEnum.showTip) {
-            const content = text ?? "提示信息";
-            if (messageType === "success") {
-              message.success(content);
-            } else if (messageType === "error") {
-              message.error(content);
+          const actions = (eventConfig.actions ?? []) as (
+            | GotoLinkConfig
+            | ShowTipConfig
+          )[];
+          actions.forEach((action) => {
+            const { type } = action;
+            if (type === ActionEnum.gotoLink) {
+              if (action.url) {
+                window.open(action.url);
+              }
+            } else if (type === ActionEnum.showTip) {
+              const { messageType, text } = action;
+              const content = text ?? "提示信息";
+              if (messageType === "success") {
+                message.success(content);
+              } else if (messageType === "error") {
+                message.error(content);
+              }
             }
-          }
+          });
         };
       }
     });
