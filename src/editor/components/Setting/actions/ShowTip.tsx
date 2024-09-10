@@ -1,35 +1,23 @@
-import { ComponentEvent } from "@/editor/store/component-config";
-import { useComponentsStore } from "@/editor/store/components";
 import { Input, Select } from "antd";
+import { ActionEnum } from "../common";
 
-export default function ShowTip(props: { event: ComponentEvent }) {
-  const { event } = props;
-  const { currentComponent, updateComponentProps } = useComponentsStore();
+export interface ShowTipConfig {
+  type?: string;
+  text?: string;
+}
 
-  const updateTipType = (eventName: string, messageType: string) => {
-    if (!currentComponent) return;
-    updateComponentProps(currentComponent.id, {
-      [eventName]: {
-        ...currentComponent.props[eventName],
-        messageType,
-      },
-    });
-  };
+export interface ShowTipProps {
+  value?: ShowTipConfig;
+  onChange?: (type: string, data: ShowTipConfig) => void;
+}
 
-  const updateText = (eventName: string, text: string) => {
-    if (!currentComponent) return;
-    updateComponentProps(currentComponent.id, {
-      [eventName]: {
-        ...currentComponent.props[eventName],
-        text,
-      },
-    });
-  };
+export default function ShowTip(props: ShowTipProps) {
+  const { value, onChange } = props;
 
   return (
     <div className="flex flex-col gap-[10px]">
       <div className="flex items-center">
-        <div>提示信息类型：</div>
+        <div>类型：</div>
         <Select
           options={[
             { label: "成功", value: "success" },
@@ -37,17 +25,24 @@ export default function ShowTip(props: { event: ComponentEvent }) {
           ]}
           className="flex-1"
           placeholder="请选择提示类型"
-          onChange={(value) => updateTipType(event.name, value)}
-          value={currentComponent?.props[event.name]?.messageType}
+          onChange={(val) =>
+            onChange?.(ActionEnum.showTip, { type: val, text: value?.text })
+          }
+          value={value?.type}
         />
       </div>
       <div className="flex items-center">
-        <div>提示文案：</div>
+        <div>文案：</div>
         <Input
           className="flex-1"
           placeholder="请输入提示文案"
-          onChange={(e) => updateText(event.name, e.target.value)}
-          value={currentComponent?.props[event.name]?.text}
+          onChange={(e) =>
+            onChange?.(ActionEnum.showTip, {
+              type: value?.type,
+              text: e.target.value,
+            })
+          }
+          value={value?.text}
         />
       </div>
     </div>

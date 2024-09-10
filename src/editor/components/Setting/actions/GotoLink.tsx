@@ -1,20 +1,17 @@
-import { ComponentEvent } from "@/editor/store/component-config";
-import { useComponentsStore } from "@/editor/store/components";
 import { Input } from "antd";
+import { ActionEnum } from "../common";
 
-export default function GotoLink(props: { event: ComponentEvent }) {
-  const { event } = props;
-  const { currentComponent, updateComponentProps } = useComponentsStore();
+export interface GotoLinkConfig {
+  url: string;
+}
 
-  const updateUrl = (eventName: string, url: string) => {
-    if (!currentComponent) return;
-    updateComponentProps(currentComponent.id, {
-      [eventName]: {
-        ...currentComponent.props[eventName],
-        url,
-      },
-    });
-  };
+export interface GotoLinkProps {
+  value?: GotoLinkConfig;
+  onChange?: (type: string, data: GotoLinkConfig) => void;
+}
+
+export default function GotoLink(props: GotoLinkProps) {
+  const { value, onChange } = props;
 
   return (
     <div className="flex items-center">
@@ -22,8 +19,10 @@ export default function GotoLink(props: { event: ComponentEvent }) {
       <Input
         className="flex-1"
         placeholder="请输入url链接"
-        onChange={(e) => updateUrl(event.name, e.target.value)}
-        value={currentComponent?.props[event.name].url}
+        onChange={(e) =>
+          onChange?.(ActionEnum.gotoLink, { url: e.target.value })
+        }
+        value={value?.url}
       />
     </div>
   );
