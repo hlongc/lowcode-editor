@@ -2,7 +2,7 @@ import { Drawer, message } from "antd";
 import { Component, useComponentsStore } from "@/editor/store/components";
 import { useComponentConfigStore } from "@/editor/store/component-config";
 import React, { createElement } from "react";
-import { ActionEnum, GotoLinkConfig, ShowTipConfig } from "../Setting/common";
+import { ActionEnum, ActionConfig } from "../Setting/common";
 
 export default function Preview() {
   const { showPreview, setShowPreview, components } = useComponentsStore();
@@ -15,10 +15,7 @@ export default function Preview() {
       const eventConfig = component.props[event.name];
       if (eventConfig) {
         props[event.name] = () => {
-          const actions = (eventConfig.actions ?? []) as (
-            | GotoLinkConfig
-            | ShowTipConfig
-          )[];
+          const actions = (eventConfig.actions ?? []) as ActionConfig[];
           actions.forEach((action) => {
             const { type } = action;
             if (type === ActionEnum.gotoLink) {
@@ -32,6 +29,14 @@ export default function Preview() {
                 message.success(content);
               } else if (messageType === "error") {
                 message.error(content);
+              }
+            } else if (type === ActionEnum.customJs) {
+              if (action.code) {
+                const fn = new Function("context", action.code);
+                fn({
+                  props: component.props,
+                  showMessage: message,
+                });
               }
             }
           });
