@@ -2,12 +2,14 @@ export enum ActionEnum {
   showTip = "showTip",
   gotoLink = "gotoLink",
   customJs = "customJs",
+  reaction = "reaction",
 }
 
 export enum ActionTypeEnum {
   link = "访问链接",
   tip = "消息提示",
   js = "自定义js",
+  reaction = "组件联动",
 }
 
 export interface GotoLinkConfig {
@@ -26,4 +28,14 @@ export interface CustomJsConfig {
   code?: string;
 }
 
-export type ActionConfig = GotoLinkConfig | ShowTipConfig | CustomJsConfig;
+export interface ComponentMethodConfig {
+  type: ActionEnum.reaction;
+  componentId: string | number;
+  method: string;
+}
+
+export type ActionConfig =
+  | GotoLinkConfig
+  | ShowTipConfig
+  | CustomJsConfig
+  | ComponentMethodConfig;

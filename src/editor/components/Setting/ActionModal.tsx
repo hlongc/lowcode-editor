@@ -58,9 +58,7 @@ export default function ActionModal({
       setCodeValue(
         getActionValue(ActionEnum.customJs) ?? {
           type: ActionEnum.customJs,
-          code: `
-          // 编写你的代码 context属性包含 props和showMessage方法
-        `,
+          code: `// 编写你的代码 context属性包含 props和showMessage方法`,
         }
       );
     }
