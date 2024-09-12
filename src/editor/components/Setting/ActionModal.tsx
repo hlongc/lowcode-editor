@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import GotoLink from "./actions/GotoLink";
 import ShowTip from "./actions/ShowTip";
 import CustomJS from "./actions/CustomJs";
+import Reaction from "./actions/Reaction";
 import { ComponentEvent } from "@/editor/store/component-config";
 import { Component } from "@/editor/store/components";
 import {
@@ -10,13 +11,19 @@ import {
   GotoLinkConfig,
   ShowTipConfig,
   CustomJsConfig,
+  ComponentMethodConfig,
   ActionTypeEnum,
 } from "./common";
 import { useMemoizedFn } from "ahooks";
 
 const tuple = <T extends string[]>(...args: T) => args;
 
-const tabs = tuple(ActionTypeEnum.link, ActionTypeEnum.tip, ActionTypeEnum.js);
+const tabs = tuple(
+  ActionTypeEnum.link,
+  ActionTypeEnum.tip,
+  ActionTypeEnum.js,
+  ActionTypeEnum.reaction
+);
 interface ActionModalProps {
   visible: boolean;
   handleClose: () => void;
@@ -55,6 +62,7 @@ export default function ActionModal({
     } else {
       setLinkValue(getActionValue(ActionEnum.gotoLink));
       setTipValue(getActionValue(ActionEnum.showTip));
+      setReactionValue(getActionValue(ActionEnum.reaction));
       setCodeValue(
         getActionValue(ActionEnum.customJs) ?? {
           type: ActionEnum.customJs,
@@ -71,6 +79,9 @@ export default function ActionModal({
   const [linkValue, setLinkValue] = useState<GotoLinkConfig | undefined>();
   const [tipValue, setTipValue] = useState<ShowTipConfig | undefined>();
   const [codeValue, setCodeValue] = useState<CustomJsConfig | undefined>();
+  const [reactionValue, setReactionValue] = useState<
+    ComponentMethodConfig | undefined
+  >();
 
   const onOk = () => {
     const actions = [];
@@ -82,6 +93,9 @@ export default function ActionModal({
     }
     if (codeValue) {
       actions.push(codeValue);
+    }
+    if (reactionValue) {
+      actions.push(reactionValue);
     }
 
     handleOk(actions);
@@ -109,6 +123,9 @@ export default function ActionModal({
         )}
         {key === ActionTypeEnum.js && (
           <CustomJS value={codeValue} onChange={setCodeValue} />
+        )}
+        {key === ActionTypeEnum.reaction && (
+          <Reaction value={reactionValue} onChange={setReactionValue} />
         )}
       </div>
     </Modal>

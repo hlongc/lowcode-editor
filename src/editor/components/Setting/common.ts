@@ -30,8 +30,8 @@ export interface CustomJsConfig {
 
 export interface ComponentMethodConfig {
   type: ActionEnum.reaction;
-  componentId: string | number;
-  method: string;
+  componentId?: number;
+  method?: string;
 }
 
 export type ActionConfig =

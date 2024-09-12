@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Collapse, CollapseProps, Popconfirm } from "antd";
-import { useComponentsStore } from "@/editor/store/components";
+import {
+  useComponentsStore,
+  getComponentById,
+} from "@/editor/store/components";
 import {
   useComponentConfigStore,
   ComponentEvent as EventType,
@@ -20,7 +23,7 @@ function EventTitle({
 }) {
   return (
     <div className="text-[#333] text-[14px] flex justify-between items-center gap-[5px]">
-      <span>{title}</span>
+      <span className="text-[blue]">{title}</span>
 
       <EditOutlined
         className="cursor-pointer ml-auto"
@@ -42,7 +45,8 @@ function EventTitle({
 }
 
 export default function ComponentEvent() {
-  const { currentComponent, updateComponentProps } = useComponentsStore();
+  const { currentComponent, updateComponentProps, components } =
+    useComponentsStore();
   const { componentConfig } = useComponentConfigStore();
 
   const [open, setOpen] = useState(false);
@@ -129,7 +133,24 @@ export default function ComponentEvent() {
                 onConfirm={handleDelete}
                 onEdit={() => onEdit(ActionTypeEnum.js)}
               />
-              <div className="text-[gray]">JS代码：{action.code}</div>
+            </div>
+          );
+        } else if (action.type === ActionEnum.reaction) {
+          const component = getComponentById(action.componentId, components);
+          const config = component
+            ? componentConfig[component.name]
+            : undefined;
+          const method = config?.methods?.find((m) => m.name === action.method);
+
+          return (
+            <div key={type} className={itemClass} style={style}>
+              <EventTitle
+                title="组件联动"
+                onConfirm={handleDelete}
+                onEdit={() => onEdit(ActionTypeEnum.reaction)}
+              />
+              <div className="text-[gray]">组件：{component?.desc}</div>
+              <div className="text-[gray]">方法：{method?.label}</div>
             </div>
           );
         }

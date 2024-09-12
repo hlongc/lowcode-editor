@@ -1,12 +1,14 @@
 import { Drawer, message } from "antd";
 import { Component, useComponentsStore } from "@/editor/store/components";
 import { useComponentConfigStore } from "@/editor/store/component-config";
-import React, { createElement } from "react";
+import React, { createElement, useRef } from "react";
 import { ActionEnum, ActionConfig } from "../Setting/common";
 
 export default function Preview() {
   const { showPreview, setShowPreview, components } = useComponentsStore();
   const { componentConfig } = useComponentConfigStore();
+
+  const componentRef = useRef<Record<string, any>>({});
 
   const handleEvents = (component: Component) => {
     const props: Record<string, any> = {};
@@ -38,6 +40,12 @@ export default function Preview() {
                   showMessage: message,
                 });
               }
+            } else if (type === ActionEnum.reaction) {
+              const { componentId, method } = action;
+              if (componentId && method) {
+                const ref = componentRef.current[componentId];
+                ref?.[method]?.();
+              }
             }
           });
         };
@@ -61,6 +69,9 @@ export default function Preview() {
           ...config.defaultProps,
           ...component.props,
           ...handleEvents(component),
+          ref: (ref: Record<string, any>) => {
+            componentRef.current[component.id] = ref;
+          },
         },
         renderComponents(component.children || [])
       );
