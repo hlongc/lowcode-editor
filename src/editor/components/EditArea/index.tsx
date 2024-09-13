@@ -33,6 +33,7 @@ export default function EditArea() {
         {
           key: component.id,
           id: component.id,
+          name: component.name,
           style: component.style,
           ...config.defaultProps,
           ...component.props,
