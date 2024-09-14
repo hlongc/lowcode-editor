@@ -7,6 +7,8 @@ import PageDev from "../components/Material/Page/dev";
 import PagePrd from "../components/Material/Page/prd";
 import ModalDev from "../components/Material/Modal/dev";
 import ModalPrd from "../components/Material/Modal/prd";
+import TableDev from "../components/Material/Table/dev";
+import TableColumnDev from "../components/Material/TableColumn/dev";
 
 export interface ComponentSetter {
   name: string;
@@ -129,6 +131,42 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
       defaultProps: {},
       dev: PageDev,
       prd: PagePrd,
+    },
+    Table: {
+      name: "Table",
+      desc: "表格",
+      defaultProps: { rowKey: "id" },
+      setter: [
+        {
+          name: "rowKey",
+          label: "rowKey",
+          type: "input",
+        },
+      ],
+      dev: TableDev,
+      prd: TableDev,
+    },
+    TableColumn: {
+      name: "TableColumn",
+      desc: "表格列",
+      defaultProps: {
+        dataIndex: `col_${Date.now()}`,
+        title: "列名",
+      },
+      dev: TableColumnDev,
+      prd: TableColumnDev,
+      setter: [
+        {
+          name: "title",
+          label: "列名",
+          type: "input",
+        },
+        {
+          name: "dataIndex",
+          label: "数据索引",
+          type: "input",
+        },
+      ],
     },
   },
   registerComponent: (name, componentConfig) =>
