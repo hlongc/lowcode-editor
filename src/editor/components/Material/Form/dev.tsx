@@ -2,21 +2,20 @@ import { CommonComponentProps } from "../../../interface";
 import useMaterialDrop from "../../../hooks/useMaterialDrop";
 import { useDrag } from "react-dnd";
 import React, { useEffect, useRef } from "react";
-import { Table as AntdTable } from "antd";
-import { useCreation } from "ahooks";
+import { Form as AntdForm } from "antd";
 
-const accept = ["TableColumn"];
+const accept = ["FormItem"];
 
 export default function Table({
   children,
   id,
   style,
   name,
-  rowKey,
+  onFinish,
   ...props
 }: CommonComponentProps) {
-  console.log("table props", props);
   const divRef = useRef<HTMLDivElement>(null);
+  const [form] = AntdForm.useForm();
   const { canDrop, drop } = useMaterialDrop(accept, id);
 
   const [_, drag] = useDrag({
@@ -24,24 +23,7 @@ export default function Table({
     item: { type: name, id, dragType: "move" },
   });
 
-  const columns = useCreation(() => {
-    return React.Children.map(children, (child: any) => {
-      console.log("child", child);
-      return {
-        title: (
-          <div
-            className="m-[-16px] p-[16px]"
-            data-component-id={child.props?.id}
-          >
-            {child.props?.title}
-          </div>
-        ),
-        dataIndex: child.props?.dataIndex,
-      };
-    });
-  }, [children]);
-
-  console.log("columns", columns);
+  console.log("columns", children);
 
   useEffect(() => {
     drop(divRef);
@@ -58,12 +40,7 @@ export default function Table({
       }`}
       style={style}
     >
-      <AntdTable
-        rowKey={rowKey}
-        columns={columns}
-        dataSource={[]}
-        pagination={false}
-      />
+      <AntdForm form={form} onFinish={onFinish}></AntdForm>
     </div>
   );
 }

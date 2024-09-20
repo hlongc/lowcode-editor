@@ -9,6 +9,10 @@ import ModalDev from "../components/Material/Modal/dev";
 import ModalPrd from "../components/Material/Modal/prd";
 import TableDev from "../components/Material/Table/dev";
 import TableColumnDev from "../components/Material/TableColumn/dev";
+import FormDev from "../components/Material/Form/dev";
+import FormPrd from "../components/Material/Form/prd";
+import FormItemDev from "../components/Material/FormItem/dev";
+import FormItemProd from "../components/Material/FormItem/prod";
 
 export interface ComponentSetter {
   name: string;
@@ -81,6 +85,43 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
       events: [
         { label: "确认事件", name: "onOk" },
         { label: "取消事件", name: "onCancel" },
+      ],
+    },
+    Form: {
+      name: "Form",
+      desc: "表单",
+      defaultProps: {},
+      dev: FormDev,
+      prd: FormPrd,
+      methods: [
+        { label: "提交表单", name: "submit" },
+        { label: "重置表单", name: "reset" },
+      ],
+      events: [{ label: "提交事件", name: "onFinish" }],
+    },
+    FormItem: {
+      name: "FormItem",
+      desc: "表单项",
+      defaultProps: {},
+      dev: FormItemDev,
+      prd: FormItemProd,
+      setter: [
+        {
+          name: "label",
+          label: "标签",
+          type: "input",
+        },
+        {
+          name: "name",
+          label: "字段名",
+          type: "input",
+        },
+        {
+          name: "type",
+          label: "字段类型",
+          type: "select",
+          options: [{ label: "输入框", value: "input" }],
+        },
       ],
     },
     Button: {
