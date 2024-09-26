@@ -1,7 +1,7 @@
 import { CommonComponentProps } from "../../../interface";
 import useMaterialDrop from "../../../hooks/useMaterialDrop";
 
-const accept = ["Container", "Button", "Table"];
+const accept = ["Container", "Button", "Table", "Form"];
 
 export default function Modal({
   children,

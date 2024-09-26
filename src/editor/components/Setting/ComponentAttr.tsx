@@ -1,11 +1,12 @@
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import { useMemoizedFn } from "ahooks";
-import { Form, Input, Select } from "antd";
+import { Form, Input, Radio, Select } from "antd";
 import {
   useComponentConfigStore,
   ComponentSetter,
 } from "@/editor/store/component-config";
 import { useComponentsStore } from "@/editor/store/components";
+import { SetterTypeEnum } from "@/editor/constant/enum";
 
 export default function ComponentAttr() {
   const [form] = Form.useForm();
@@ -21,13 +22,27 @@ export default function ComponentAttr() {
   }, [currentComponent]);
 
   const renderSetter = useMemoizedFn((setter: ComponentSetter) => {
-    const { type, options } = setter;
-    if (type === "input") {
-      return <Input />;
-    } else if (type === "select") {
-      return <Select options={options} />;
+    const { type, options, name, label, valuePropName } = setter;
+    let el: ReactNode = null;
+
+    if (type === SetterTypeEnum.Input) {
+      el = <Input />;
+    } else if (type === SetterTypeEnum.Select) {
+      el = <Select options={options} />;
+    } else if (type === SetterTypeEnum.RadioGroup) {
+      el = <Radio.Group size="small" options={options} optionType="button" />;
     }
-    return null;
+
+    return (
+      <Form.Item
+        key={name}
+        label={label}
+        name={name}
+        valuePropName={valuePropName}
+      >
+        {el}
+      </Form.Item>
+    );
   });
 
   if (!currentComponentId || !currentComponent) return null;
@@ -52,13 +67,7 @@ export default function ComponentAttr() {
       <Form.Item label="组件描述">
         <Input disabled value={currentComponent.desc} />
       </Form.Item>
-      {componentConfig[currentComponent.name].setter?.map((setter) => {
-        return (
-          <Form.Item key={setter.name} label={setter.label} name={setter.name}>
-            {renderSetter(setter)}
-          </Form.Item>
-        );
-      })}
+      {componentConfig[currentComponent.name].setter?.map(renderSetter)}
     </Form>
   );
 }

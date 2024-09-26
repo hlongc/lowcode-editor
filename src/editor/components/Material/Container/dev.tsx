@@ -3,7 +3,7 @@ import { useDrag } from "react-dnd";
 import { CommonComponentProps } from "@/editor/interface";
 import useMaterialDrop, { DragTypeEnum } from "@/editor/hooks/useMaterialDrop";
 
-const accept = ["Container", "Button", "Table"];
+const accept = ["Container", "Button", "Table", "Form"];
 
 export default function Container({
   children,

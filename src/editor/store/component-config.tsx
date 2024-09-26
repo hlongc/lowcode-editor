@@ -13,6 +13,7 @@ import FormDev from "../components/Material/Form/dev";
 import FormPrd from "../components/Material/Form/prd";
 import FormItemDev from "../components/Material/FormItem/dev";
 import FormItemProd from "../components/Material/FormItem/prod";
+import { SetterTypeEnum } from "@/editor/constant/enum";
 
 export interface ComponentSetter {
   name: string;
@@ -90,9 +91,23 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
     Form: {
       name: "Form",
       desc: "表单",
-      defaultProps: {},
+      defaultProps: {
+        layout: "horizontal",
+      },
       dev: FormDev,
       prd: FormPrd,
+      setter: [
+        {
+          label: "表单布局",
+          name: "layout",
+          type: SetterTypeEnum.RadioGroup,
+          options: [
+            { label: "水平布局", value: "horizontal" },
+            { label: "垂直布局", value: "vertical" },
+            { label: "行内", value: "inline" },
+          ],
+        },
+      ],
       methods: [
         { label: "提交表单", name: "submit" },
         { label: "重置表单", name: "reset" },
@@ -102,25 +117,38 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
     FormItem: {
       name: "FormItem",
       desc: "表单项",
-      defaultProps: {},
+      defaultProps: {
+        label: "表单项",
+        name: `field_${Date.now()}`,
+        type: "input",
+      },
       dev: FormItemDev,
       prd: FormItemProd,
       setter: [
         {
           name: "label",
           label: "标签",
-          type: "input",
+          type: SetterTypeEnum.Input,
         },
         {
           name: "name",
           label: "字段名",
-          type: "input",
+          type: SetterTypeEnum.Input,
         },
         {
           name: "type",
           label: "字段类型",
-          type: "select",
+          type: SetterTypeEnum.Select,
           options: [{ label: "输入框", value: "input" }],
+        },
+        {
+          name: "required",
+          label: "必填",
+          type: SetterTypeEnum.RadioGroup,
+          options: [
+            { label: "是", value: true },
+            { label: "否", value: false },
+          ],
         },
       ],
     },
